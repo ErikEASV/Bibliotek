@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 
 import java.util.List;
 
-
 public class BibliotekController {
     @FXML
     private TextField isbnText,titleText,categoryText;
@@ -32,13 +31,8 @@ public class BibliotekController {
     protected void getAllBooksHandler(Event e) {
         List<Book> books = bdi.getAllBooks();
         booksText.clear();
-        for(Book book: books){
-            booksText.appendText(book.getIsbn() + ", "+book.getTitle() + ", "+ book.getCategory() + "\n");
+        for(Book book : books){
+            booksText.appendText(book.toString()+"\n");
         }
     }
-
-
-
-
-
 }

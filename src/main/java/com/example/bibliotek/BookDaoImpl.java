@@ -9,13 +9,8 @@ public class BookDaoImpl implements BookDao {
     private Connection con; // forbindelsen til databasen
     public BookDaoImpl()  {
         try{
-            // Bemærk: selve connection-strengen skal tilpasses Jeres connection settings..
-            /// jdbc:sqlserver://server.database.windows.net:1433   U6u7U8u5yY
-            // jdbc:sqlserver://localhost:1433;database=LibDB
-            // jdbc:sqlserver://localhost:1433;database=LibDB;userName=sa;password=U6u7U8u5yY
             con = DriverManager.getConnection("jdbc:sqlserver://10.176.111.34:1433;database=CSe2023t_t_11_LibDB;userName=CSe2023t_t_11;password=CSe2023tT11#23;encrypt=true;trustServerCertificate=true");
-            //con = DriverManager.getConnection("jdbc:sqlserver://EASV-THA-Q418\\TH:1433;database=LibDB;integratedSecurity=true");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println("Kan ikke skabe forbindelse:" + e.getErrorCode() + e.getMessage());
         }
         System.out.println("Forbundet til databasen... ");
@@ -23,11 +18,21 @@ public class BookDaoImpl implements BookDao {
 
     public void saveBook(Book book) {
         try{
+            // med alm. db-kald:
+            Statement database = con.createStatement();
+            String sql = "INSERT INTO BOOK (isbn, title, type) VALUES "
+                    + "('"+book.getIsbn()
+                    +"','"+book.getTitle()
+                    +"','"+book.getCategory()
+                    +"')";
+            database.executeUpdate(sql);
+
+        /* eller med preparedstatement:
             PreparedStatement ps = con.prepareStatement("INSERT INTO BOOK VALUES(?,?,?);");
             ps.setString(1, book.getIsbn());
             ps.setString(2,book.getTitle());
             ps.setString(3,book.getCategory());
-            ps.executeUpdate();
+            ps.executeUpdate();*/
 
         } catch (SQLException e){
             System.err.println("Kan ikke indsætte record");
@@ -37,6 +42,19 @@ public class BookDaoImpl implements BookDao {
     public List<Book> getAllBooks() {
         List<Book> books= new ArrayList();
         try{
+            // med alm. db-kald:
+            Statement database = con.createStatement();
+            String sql = "SELECT * FROM Book";
+            ResultSet rs = database.executeQuery(sql);
+            while (rs.next()) {
+                String isbn     = rs.getString("isbn");
+                String title    = rs.getString("title");
+                String type     = rs.getString("type");
+
+                Book book = new Book(isbn, title, type);
+                books.add(book);
+            }
+            /* eller med preparedStatement:
             PreparedStatement ps = con.prepareStatement("SELECT * FROM Book;");
             ResultSet rs = ps.executeQuery();
 
@@ -48,7 +66,7 @@ public class BookDaoImpl implements BookDao {
 
                 book = new Book(isbn,title,category);
                 books.add(book);
-            }
+            }*/
 
         } catch (SQLException e){
             System.err.println("Kan ikke læse records");

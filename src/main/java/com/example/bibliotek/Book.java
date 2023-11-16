@@ -23,7 +23,9 @@ public class Book {
         return this.category;
     }
 
-
+    public String toString() {
+        return isbn + " " + title + " " + category;
+    }
 
 
 }
