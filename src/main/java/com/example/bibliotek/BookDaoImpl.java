@@ -25,6 +25,7 @@ public class BookDaoImpl implements BookDao {
                     +"','"+book.getTitle()
                     +"','"+book.getCategory()
                     +"')";
+            System.out.println("SQL: " + sql);
             database.executeUpdate(sql);
 
         /* eller med preparedstatement:
@@ -35,7 +36,7 @@ public class BookDaoImpl implements BookDao {
             ps.executeUpdate();*/
 
         } catch (SQLException e){
-            System.err.println("Kan ikke indsætte record");
+            System.err.println("Kan ikke indsætte record: " + e.getMessage());
         }
     }
 
